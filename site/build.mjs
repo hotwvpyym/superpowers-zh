@@ -19,6 +19,11 @@ const DIST = join(__dirname, 'dist');
 const TEMPLATE = join(__dirname, 'template');
 const PKG = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
 
+// 内容 hash 版本号：styles.css / app.js 内容变化时 URL 自动变（?v=hash），
+// 绕过 Cloudflare 边缘缓存，确保 CSS/JS 改动立即生效；内容不变则继续命中缓存。
+const cssVer = createHash('sha256').update(readFileSync(join(TEMPLATE, 'styles.css'))).digest('hex').slice(0, 10);
+const jsVer = createHash('sha256').update(readFileSync(join(TEMPLATE, 'app.js'))).digest('hex').slice(0, 10);
+
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 // ---- frontmatter 解析 ----
@@ -311,7 +316,7 @@ function layout({ lang, base, title, desc, body, langHref, extraHead = '' }) {
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:type" content="website">
 <link rel="icon" href="${base}assets/app-icon.png">
-<link rel="stylesheet" href="${base}styles.css">
+<link rel="stylesheet" href="${base}styles.css?v=${cssVer}">
 <script>(function(){try{var m=localStorage.getItem('sp-theme');if(m==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 ${extraHead}</head>
 <body>
@@ -341,7 +346,7 @@ ${body}
   </div>
   <p class="copyright">${t.copyright}</p>
 </footer>
-<script src="${base}app.js"></script>
+<script src="${base}app.js?v=${jsVer}"></script>
 </body>
 </html>`;
 }
