@@ -11,6 +11,8 @@
     "superpowers-zh": "bin/superpowers-zh.js"
   },
   "scripts": {
+    "site": "node site/build.mjs",
+    "site:deploy": "node site/build.mjs && wrangler pages deploy site/dist --project-name=superpowers-zh-site",
     "version": "node scripts/sync-plugin-version.js && git add .claude-plugin/plugin.json .claude-plugin/marketplace.json .cursor-plugin/plugin.json .codex-plugin/plugin.json gemini-extension.json"
   },
   "files": [
@@ -24,6 +26,7 @@
     ".codex-plugin/",
     ".opencode/INSTALL.md",
     ".opencode/plugins/",
+    ".pi/extensions/",
     "CLAUDE.md",
     "GEMINI.md",
     "RELEASE-NOTES.md",
@@ -60,8 +63,17 @@
     "中文",
     "tdd",
     "debugging",
-    "code-review"
+    "code-review",
+    "pi-package"
   ],
+  "pi": {
+    "skills": [
+      "./skills"
+    ],
+    "extensions": [
+      "./.pi/extensions/superpowers.ts"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jnMetaCode/superpowers-zh.git"
